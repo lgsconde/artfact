@@ -3,7 +3,7 @@
 name: Exemplo Artifact
   run-name:Exemplo workflow para actifact, executado por ${{ github.actor}}
 on: 
-   workflow_dispatch:
+ workflow_dispatch:
 env:
     nome-artefato: teste-artefato         #Criando Var     
 
