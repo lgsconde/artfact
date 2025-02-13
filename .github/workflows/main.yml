@@ -1,18 +1,22 @@
+
+# Criação de arquivo para realizar upload usando action "Upload a Build Artifact" 
 name: Exemplo Artifact
-     run-name:Exemplo workflow para actifact, executado por
-on:
- workflow_dispatch:
+  run-name:Exemplo workflow para actifact, executado por ${{ github.actor}}
+on: 
+   workflow_dispatch:
+env:
+    nome-artefato: teste-artefato         #Criando Var     
 
 jobs: 
-    upload-artifact: 
-         runs-on: ubuntu-latest
-         steps:
+  upload-artifact: 
+    runs-on: ubuntu-latest
+    steps:
               - name: Listagem de arquivos
-                run: ls                                                             //Somente para listar se tem algum arquivo
+                run: ls       # Somente para listar se tem algum arquivo
               
               - name: Gerar alguns arquivos 
                 run: |
-                   mkdir artefatos                                                  //Criou a pasta ARTEFATOS
+                   mkdir artefatos     # Criou a pasta ARTEFATOS
                    echo "Arquivo de teste 01" > ./artefatos/primeiro_arquivo.txt
                    echo "Arquivo de teste 02" > ./artefatos/segundo_arquivo.txt
                    echo "Arquivo de teste 03" > ./artefatos/terceiro_arquivo.txt
@@ -20,9 +24,9 @@ jobs:
                
               - name: envio dos arquivos
                 uses: actions/upload-artifact@v4
-                id: upload-artifact                                                  //Criação de ID para enviar o artafact com ID.
+                id: upload-artifact    # Criação de ID para enviar o artafact com ID.
                 with:
-                  name: teste-artefato
+                  name: ${{ env.nome-artefato }}          #Váriavel usado, declarado lá em cima.
                   path: ./artefatos
               
               - name: Listagem de arquivo
@@ -30,4 +34,19 @@ jobs:
 
               - name: Endereço para Obeter os artefatos
                 run: |
-                 echo "${{ steps.upload-artificat.outputs.artifact-url }}"         //gerou URL para Artifact    
+                 echo "${{ steps.upload-artificat.outputs.artifact-url }}"    # Gerou URL para Artifact   
+
+# Ação para realizar Download usando action "Download a Build Artifact"
+
+    download-artifact:
+     run-on: ubuntu-latest
+     needs: [upload-artifact]
+     steps:
+       - name: Listagem de arquivos   
+         run: ls
+       
+       - name: Download  Artifacts
+         uses: actions/download-artifact@v4
+         with
+         - name: ${{ env.nome-artefato }} #Váriavel usado, declarado lá em cima.
+        
