@@ -1,35 +1,27 @@
-name: Exemplo output
-     run-name: Exemplo workflow para output, executado por ${{ github.actor }}
+name: Exemplo Artifact
+     run-name: Exemplo workflow para actifact, executado por ${{ github.actor }}
  on: 
 workflow_dispatch:
 
 jobs: 
-    gerando_output: 
+    upload-artifact: 
          runs-on: ubuntu-latest
-         outputs:                          //Declando output a nível de Job           
-              output-shell: $ {{ steps.exemplo-output.outputs.action_radom}} 
-              output-generatedpassword: ${{ steps.generatedpassword.outputs.password }}
-         steps:
-              - name: Gerando output com shell
-                id: exemplo-output 
-                    run: | 
-                        ACTION_RANDOM= $(($RANDOM )) 
-                         echo “action_random=$ACTION_RANDOM” >> $GITHUB_OUTPUT
-            
-                 - name: Exibindo o output da action exemplo output 
-                     run: |
-                         echo“${{isteps.exemplo-output.outputs.action_dandom }}” 
-          
-          exibindo valores:                              //Outro JOB
-                   needs:  [gerando_output ]
-                   runs-on: ubuntu-latest 
-                    steps: 
-                        - name: Exibindo os outputs do gerando_outputs
-                          run: |
-                             echo "Output shell: ${{ needs.gerando_output.outputs.output-shell }}"
-                             echo "Output Password: ${{ needs.gerando_output.outputs.output-generatedpassword }}"
-                              
-                
+        steps:
+              - name: Listagem de arquivos
+                run: ls                              //Somente para listar tem algum arquivo
               
-                  
-                
+              - name: Gerar alguns arquivos 
+                run: |
+                   mkdir artefatos               //Criou a pasta ARTEFATOS
+                   echo "Arquivo de teste 01" > ./artefatos/primeiro_arquivo.txt
+                   echo "Arquivo de teste 02" > ./artefatos/segundo_arquivo.txt
+                   echo "Arquivo de teste 03" > ./artefatos/terceiro_arquivo.txt
+                   echo "Arquivo de teste 04" > ./artefatos/quarta_arquivo.txt
+               
+              - name: envio dos arquivos
+                uses: actions/upload-artifact@v4
+                  with:
+                      name: teste-artefato
+                      path: ./artefatos
+               - name: Listagem de arquivo
+                    run:  ls    
