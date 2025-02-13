@@ -47,6 +47,8 @@ jobs:
        
        - name: Download  Artifacts
          uses: actions/download-artifact@v4
-         with
-         - name: ${{ env.nome-artefato }} #Váriavel usado, declarado lá em cima.
-        
+          with
+            name: ${{ env.nome-artefato }}       #Váriavel usado, declarado lá em cima.
+      
+       - name: Listagem de Arquivos
+         run: ls
