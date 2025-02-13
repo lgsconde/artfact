@@ -1,0 +1,35 @@
+ame: Exemplo output
+     run-name: Exemplo workflow para output, executado por ${{ github.actor }}
+ on: 
+workflow_dispatch:
+
+jobs: 
+    gerando_output: 
+         runs-on: ubuntu-latest
+         outputs:                          //Declando output a nível de Job           
+              output-shell: $ {{ steps.exemplo-output.outputs.action_radom}} 
+              output-generatedpassword: ${{ steps.generatedpassword.outputs.password }}
+         steps:
+              - name: Gerando output com shell
+                id: exemplo-output 
+                    run: | 
+                        ACTION_RANDOM= $(($RANDOM )) 
+                         echo “action_random=$ACTION_RANDOM” >> $GITHUB_OUTPUT
+            
+                 - name: Exibindo o output da action exemplo output 
+                     run: |
+                         echo“${{isteps.exemplo-output.outputs.action_dandom }}” 
+          
+          exibindo valores:                              //Outro JOB
+                   needs:  [gerando_output ]
+                   runs-on: ubuntu-latest 
+                    steps: 
+                        - name: Exibindo os outputs do gerando_outputs
+                          run: |
+                             echo "Output shell: ${{ needs.gerando_output.outputs.output-shell }}"
+                             echo "Output Password: ${{ needs.gerando_output.outputs.output-generatedpassword }}"
+                              
+                
+              
+                  
+                
