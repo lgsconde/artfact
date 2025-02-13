@@ -1,4 +1,4 @@
-ame: Exemplo output
+name: Exemplo output
      run-name: Exemplo workflow para output, executado por ${{ github.actor }}
  on: 
 workflow_dispatch:
